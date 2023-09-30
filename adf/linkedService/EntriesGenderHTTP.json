@@ -1,0 +1,12 @@
+{
+	"name": "EntriesGenderHTTP",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://raw.githubusercontent.com/wliu123/Olympic-Data-AnalytEng/main/data/EntriesGender.csv",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
