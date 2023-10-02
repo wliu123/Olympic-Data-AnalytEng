@@ -1,4 +1,9 @@
 # Databricks notebook source
+from pyspark.sql.functions import col
+from pyspark.sql.types import IntegerType, DoubleType, DateType
+
+# COMMAND ----------
+
 # clientID = dbutils.secrets.get("tokyo")
 dbutils.secrets.listScopes()
 
@@ -39,6 +44,79 @@ dbutils.fs.mount(
 
 # MAGIC %fs
 # MAGIC ls "/mnt/tokyoolympic"
+
+# COMMAND ----------
+
+athletes = spark.read.format("csv").option("header", "true").load("/mnt/tokyoolympic/raw-data/athletes.csv")
+coaches = spark.read.format("csv").option("header", "true").load("/mnt/tokyoolympic/raw-data/coaches.csv")
+entriesgender = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/mnt/tokyoolympic/raw-data/entriesgender.csv")
+medals = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/mnt/tokyoolympic/raw-data/medals.csv")
+teams = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/mnt/tokyoolympic/raw-data/teams.csv")
+
+# COMMAND ----------
+
+athletes.show()
+
+# COMMAND ----------
+
+athletes.printSchema()
+
+# COMMAND ----------
+
+coaches.show()
+
+# COMMAND ----------
+
+coaches.printSchema()
+
+# COMMAND ----------
+
+entriesgender.show()
+
+# COMMAND ----------
+
+entriesgender.printSchema()
+
+# COMMAND ----------
+
+entriesgender = entriesgender.withColumn("Female", col("Female").cast(IntegerType()))\
+    .withColumn("Male", col("Male").cast(IntegerType()))\
+    .withColumn("Total", col("Total").cast(IntegerType()))
+
+# COMMAND ----------
+
+entriesgender.printSchema()
+
+# COMMAND ----------
+
+medals.show()
+
+# COMMAND ----------
+
+medals.printSchema()
+
+# COMMAND ----------
+
+teams.show()
+
+# COMMAND ----------
+
+teams.printSchema()
+
+# COMMAND ----------
+
+# Find the top countries with the highest number of gold medals
+top_gold = medals.orderBy("Gold", ascending = False).select("Team_Country", "Gold").show()
+
+# COMMAND ----------
+
+#Calculate the fraction number of entries by gender for each discipline
+average_entries = entriesgender.withColumn(
+    'Avg_Female', entriesgender['Female'] / entriesgender['Total']
+).withColumn(
+    'Avg_Male', entriesgender['Male'] / entriesgender['Total']
+)
+average_entries.show()
 
 # COMMAND ----------
 
