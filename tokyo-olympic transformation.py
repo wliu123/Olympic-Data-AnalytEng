@@ -120,4 +120,15 @@ average_entries.show()
 
 # COMMAND ----------
 
+athletes.repartition(1).write.mode("overwrite").option("header", "true").csv("/mnt/tokyoolympic/transformed-data/athletes")
+
+# COMMAND ----------
+
+coaches.repartition(1).write.mode("overwrite").option("header", "true").csv("/mnt/tokyoolympic/transformed-data/coaches")
+entriesgender.repartition(1).write.mode("overwrite").option("header", "true").csv("/mnt/tokyoolympic/transformed-data/entriesgender")
+medals.repartition(1).write.mode("overwrite").option("header", "true").csv("/mnt/tokyoolympic/transformed-data/medals")
+teams.repartition(1).write.mode("overwrite").option("header", "true").csv("/mnt/tokyoolympic/transformed-data/teams")
+
+# COMMAND ----------
+
 
